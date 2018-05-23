@@ -1,10 +1,16 @@
-const slack = require('slack-node');
+const Slack = require('slack-node');
+const sendToSlack = false;
 
 const hostList = {
   21: [
     'Vinna',
     'Eve',
   ],
+
+  22: [
+    'Ze',
+    'Oto ze',
+  ]
 };
 
 const membersList = [
@@ -65,7 +71,15 @@ Grupo de *${hosts[1]}* (18:00)
 ${group2}\`\`\`
 ${nextHosts !== undefined ? `Os hosts da próxima semana serão: ${nextHosts.join(' e ')}` : 'Não consegui encontrar hosts para a próxima semana. Acabou?'}
 `;
-  console.log(slackMsg);
+
+  const slack = new Slack();
+  if (sendToSlack) {
+    slack.setWebhook('...');
+    slack.webhook({
+      text: slackMsg,
+    }, (err, response) => {
+    });
+  }
 };
 
 const dojoList = sortDojo(hostList, membersList);
