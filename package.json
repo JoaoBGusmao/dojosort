@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^5.0.1",
     "nodemon": "^1.17.5",
     "slack-node": "^0.1.8"
   }

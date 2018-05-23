@@ -1,5 +1,7 @@
 const Slack = require('slack-node');
-const sendToSlack = false;
+require('dotenv').config();
+
+const sendToSlack = process.argv[2] === 'send';
 
 const hostList = {
   21: [
@@ -74,7 +76,7 @@ ${nextHosts !== undefined ? `Os hosts da próxima semana serão: ${nextHosts.joi
 
   const slack = new Slack();
   if (sendToSlack) {
-    slack.setWebhook('...');
+    slack.setWebhook(process.env.SLACK_URL);
     slack.webhook({
       text: slackMsg,
     }, (err, response) => {
