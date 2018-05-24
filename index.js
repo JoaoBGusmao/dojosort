@@ -1,39 +1,17 @@
 const Slack = require('slack-node');
+const axios = require('axios');
 require('dotenv').config();
 
 const sendToSlack = process.argv[2] === 'send';
 
-const hostList = {
-  21: [
-    'Vinna',
-    'Eve',
-  ],
-
-  22: [
-    'Ze',
-    'Oto ze',
-  ]
-};
-
-const membersList = [
-  'Rafa',
-  'Matheus',
-  'Eve',
-  'João',
-  'Torto',
-  'Jonathan',
-  'Moyle',
-  'Pablo',
-  'Vinna',
-  'LG',
-  'Tagliati',
-  'Will',
-  'Aline',
-  'Ivan',
-  'Andre',
-  'Thays',
-  'Fumes',
-];
+const getFromApi = async () => {
+  try {
+    const response = await axios.get(process.env.API_URL);
+    return response.data;
+  } catch(error) {
+    return { hostList: {}, membersList: [] };
+  }
+}
 
 const excludeHosts = (hosts, members) =>
   members.filter(member => hosts.indexOf(member) === -1)
@@ -84,5 +62,15 @@ ${nextHosts !== undefined ? `Os hosts da próxima semana serão: ${nextHosts.joi
   }
 };
 
-const dojoList = sortDojo(hostList, membersList);
-sendDojoList(dojoList, hostList);
+const run = async () => {
+  const apiData = await getFromApi();
+  const jsonData = JSON.parse(apiData.files['dojoConfig.json'].content);
+
+  const hostList = jsonData.hostList;
+  const membersList = jsonData.memeberList;
+
+  const dojoList = sortDojo(hostList, membersList);
+  sendDojoList(dojoList, hostList);
+}
+
+run();
