@@ -67,7 +67,7 @@ const run = async () => {
   const jsonData = JSON.parse(apiData.files['dojoConfig.json'].content);
 
   const hostList = jsonData.hostList;
-  const membersList = jsonData.memeberList;
+  const membersList = jsonData.memberList;
 
   const dojoList = sortDojo(hostList, membersList);
   sendDojoList(dojoList, hostList);

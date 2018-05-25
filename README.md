@@ -22,7 +22,7 @@ JSON example:
       "Gente 4"
     ]
   },
-  "memeberList": [
+  "memberList": [
     "Gente 1",
     "Gente 2",
     "Gente 3",
