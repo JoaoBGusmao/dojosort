@@ -1,14 +1,13 @@
 const Slack = require('slack-node');
 const axios = require('axios');
-require('dotenv').config();
 
-const sendToSlack = process.argv[2] === 'send';
+const noSendToSlack = process.argv[2] === 'nosend';
 
 const getFromApi = async () => {
   try {
     const response = await axios.get(process.env.API_URL);
     return response.data;
-  } catch(error) {
+  } catch (error) {
     return { hostList: {}, membersList: [] };
   }
 }
@@ -42,35 +41,32 @@ const sendDojoList = (dojoList, hostList) => {
   const nextHosts = getHosts(hostList, true);
 
   const slackMsg = `
-Grupo de *${hosts[0]}* (17:00)
-\`\`\`
-${group1}\`\`\`
+Grupo de *${hosts[0]}* (17:00) \`\`\`${group1}\`\`\`
 
-Grupo de *${hosts[1]}* (18:00)
-\`\`\`
-${group2}\`\`\`
+Grupo de *${hosts[1]}* (18:00) \`\`\`${group2}\`\`\`
 ${nextHosts !== undefined ? `Os hosts da próxima semana serão: ${nextHosts.join(' e ')}` : 'Não consegui encontrar hosts para a próxima semana. Acabou?'}
 `;
 
   const slack = new Slack();
-  if (sendToSlack) {
+  if (!noSendToSlack) {
     slack.setWebhook(process.env.SLACK_URL);
     slack.webhook({
       text: slackMsg,
     }, (err, response) => {
     });
   }
+
+  console.log(slackMsg);
 };
 
 const run = async () => {
   const apiData = await getFromApi();
-  const jsonData = JSON.parse(apiData.files['dojoConfig.json'].content);
 
-  const hostList = jsonData.hostList;
-  const membersList = jsonData.memberList;
+  const hostList = apiData.hostList;
+  const membersList = apiData.memberList;
 
   const dojoList = sortDojo(hostList, membersList);
   sendDojoList(dojoList, hostList);
 }
 
-run();
+module.exports = run;
