@@ -22,7 +22,7 @@ const getCurrentWeek = () => {
 }
 
 const getHosts = (hostList, nextWeek) =>
-  hostList[nextWeek ? getCurrentWeek() + 1 : getCurrentWeek()];
+  hostList[nextWeek ? getCurrentWeek() + 2 : getCurrentWeek() + 1];
 
 const sortDojo = (hostList, members) => {
   const hosts = getHosts(hostList);
@@ -44,7 +44,7 @@ const sendDojoList = (dojoList, hostList) => {
 Grupo de *${hosts[0]}* (17:00) \`\`\`${group1}\`\`\`
 
 Grupo de *${hosts[1]}* (18:00) \`\`\`${group2}\`\`\`
-${nextHosts !== undefined ? `Os hosts da próxima semana serão: ${nextHosts.join(' e ')}` : 'Não consegui encontrar hosts para a próxima semana. Acabou?'}
+${nextHosts !== undefined ? `Depois deles, os hosts serão: ${nextHosts.join(' e ')}` : 'Não consegui encontrar próximos hosts. Acabou?'}
 `;
 
   const slack = new Slack();
